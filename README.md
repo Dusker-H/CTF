@@ -1,2 +1,2 @@
 # CTF
-CTF problems I solved
+CTF problems
