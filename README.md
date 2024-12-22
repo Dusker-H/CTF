@@ -1,2 +1,2 @@
 # CTF
-CTF problems DreamHack
+CTF problems
