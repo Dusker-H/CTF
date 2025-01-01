@@ -20,10 +20,13 @@ def index():
 @app.route('/rate',methods=['POST'])
 def rate():
 	link = request.form.get('link')
+	print(link)
 	if not link or re.search(r'[\x00-\x20\[\]%{}\-]',link) or not link.isascii():
 		return 'Invalid link', 400, {'Content-Type': 'text/plain'}
 	try:
 		p = subprocess.run(["/usr/bin/curl",link],capture_output=True,timeout=0.5)
+		print(p)
+		print(p.returncode)
 		if(p.returncode == 0):
 			resultID = str(uuid.uuid4())
 			rds.set(resultID,str(random.randint(1,9)))

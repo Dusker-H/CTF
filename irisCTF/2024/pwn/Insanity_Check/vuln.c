@@ -18,8 +18,8 @@ int main() {
     fgets(name, 64, stdin);
     rstrip(name, 64);
 
-    strcpy(message, "Hi there, ");
-    strcpy(message + strlen(message), name);
+    strcpy(message, "Hi there, "); // message는 10Byte 
+    strcpy(message + strlen(message), name); // message의 주소에 strlen(message)를 더하면 문자열의 끝(널 문자 위치)을 가리키는 포인터가 됨
     memcpy(message + strlen(message), suffix, sizeof(suffix));
 
     printf("%s\n", message);
