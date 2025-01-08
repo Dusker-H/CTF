@@ -7,7 +7,7 @@ services:
       - "8001:8000"
     environment:
       - "FLAG=ASIS{test-flag}"
-      - "CAPTCHA_SECRET=6LeVx7AqAAAAAIsqypbJJlJEMydoy5_t_fY1fEAA"
+      - "CAPTCHA_SECRET="
   web:
     image: nginx
     restart: always 

