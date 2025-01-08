@@ -32,7 +32,7 @@ void interface() {
         printf("6) Exit\n");
         printf("> ");
 
-        const int selection = fgetc(stdin) - static_cast<int>('0');
+        const int selection = fgetc(stdin) - static_cast<int>('0'); // 문자 값을 읽어와 아스키 값에서 '0'(아스키 값 48)을 빼 줌으로서 int 타입으로 변환
         fgetc(stdin);
 
         switch (selection) {

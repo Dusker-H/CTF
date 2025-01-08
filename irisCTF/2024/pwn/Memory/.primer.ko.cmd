@@ -1,0 +1,1 @@
+cmd_/home/dusker/CTF/irisCTF/2024/pwn/Memory/primer.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/dusker/CTF/irisCTF/2024/pwn/Memory/primer.ko /home/dusker/CTF/irisCTF/2024/pwn/Memory/primer.o /home/dusker/CTF/irisCTF/2024/pwn/Memory/primer.mod.o;  true

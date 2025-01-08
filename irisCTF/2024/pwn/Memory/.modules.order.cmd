@@ -1,0 +1,1 @@
+cmd_/home/dusker/CTF/irisCTF/2024/pwn/Memory/modules.order := {   echo /home/dusker/CTF/irisCTF/2024/pwn/Memory/primer.ko; :; } | awk '!x[$$0]++' - > /home/dusker/CTF/irisCTF/2024/pwn/Memory/modules.order

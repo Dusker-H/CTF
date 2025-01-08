@@ -1,0 +1,1 @@
+cmd_/home/dusker/CTF/irisCTF/2024/pwn/Memory/Module.symvers := sed 's/\.ko$$/\.o/' /home/dusker/CTF/irisCTF/2024/pwn/Memory/modules.order | scripts/mod/modpost -m -a  -o /home/dusker/CTF/irisCTF/2024/pwn/Memory/Module.symvers -e -i Module.symvers   -T -

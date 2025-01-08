@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css"
+        type="text/css">
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
+        type="text/css" />
+    <title>Find My Location</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #geocoder-container>div {
+            min-width: 50%;
+            margin-left: 25%;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .marker {
+            background-image: url('https://docs.mapbox.com/help/demos/custom-markers-gl-js/mapbox-icon.png');
+            background-size: cover;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .mapboxgl-popup {
+            max-width: 200px;
+        }
+
+        .mapboxgl-popup-content {
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .search {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* .mapboxgl-ctrl-geocoder--input {
+            padding-left: 35px !important;
+            width: 350px !important;
+            margin-right: 30px !important;
+        } */
+
+        .searchBtn {
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            padding: 11.2px 8px;
+            z-index: 9999;
+            background-color: white;
+            outline: none;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+        .form{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .form input{
+            z-index: 9999;
+            padding: 2px 10px;
+            background-color: white;
+            margin-top: 10px;
+            outline: none;
+            border: none;
+            width: 350px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <div class="form">
+        <input type="text" class="mapboxgl-ctrl-geocoder--input">
+        <button class="searchBtn" type="button">Search</button>
+    </div>
+
+    <script src="main.js" defer></script>
+
+    <script defer>
+        const btn = document.querySelector('button')
+
+
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault()
+            const data = document.querySelector('.mapboxgl-ctrl-geocoder--input').value
+            const list = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${data}.json?access_token=pk.eyJ1IjoiYWVsZWN0cm9uIiwiYSI6ImNrenFrMnB6MjU4aHozMG8xd2NyOW1wMXIifQ.pxgiSakfpfYjvjLXlFyFvA`)
+            const lists = await list.json()
+            
+            const res = await fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    auth: { name: "user", password: "pwd" },
+                    location: { name: data }
+                })
+            })
+            const result = await res.json()
+            sessionStorage.setItem('history', JSON.stringify(result))
+
+            test(lists)
+
+        })
+    </script>
+</body>
+
+</html>

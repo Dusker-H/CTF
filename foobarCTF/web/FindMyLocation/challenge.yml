@@ -1,0 +1,38 @@
+name: "Find My Location"
+author: "electron"
+category: Web
+
+description: |
+  OBJECTive : FIND THE FLAG !!!
+  ps : don't check robots.txt
+  http://chall.foobar.nitdgplug.org:30230/
+
+type: dynamic
+
+value: 500
+decay: 40
+minimum: 100
+
+flags:
+  - GLUG{9orO7yp3_po11u7iOn_f1nd_1oc4tiOn}
+
+tags:
+  - web
+
+files:
+  - "web/FindMyLocation/dist/server.js"
+
+state: hidden
+
+version: "0.1"
+
+replicas: 5
+containers:
+  server:
+    build: .
+    ports:
+      - containerPort: 9999
+
+expose:
+- containerPort: 9999
+  nodePort: 30230

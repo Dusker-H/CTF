@@ -1,0 +1,3 @@
+flask
+pillow
+PyYAML==5.3.1

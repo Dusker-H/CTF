@@ -1,0 +1,37 @@
+name: File Club
+author: "deadlycode07 x ЕЯЯОЯ"
+category: Web
+
+description: |
+  Glot Glot
+  http://chall.foobar.nitdgplug.org:30625
+
+type: dynamic
+
+value: 500
+decay: 40
+minimum: 100
+
+files:
+  - web/fileclub/src/app.py
+
+flags:
+  - GLUG{7he_th1ng5_y0u_us3d_7o_0wn_n0w_th3y_0wn_y0u_YA0MQQOFP9}
+
+tags:
+  - web
+
+state: hidden
+
+version: "0.1"
+
+replicas: 2
+containers:
+  server:
+    build: .
+    ports:
+      - containerPort: 8000
+
+expose:
+- containerPort: 8000
+  nodePort: 30625

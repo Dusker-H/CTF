@@ -1,0 +1,37 @@
+name: The Photo Exhibit
+author: "CyberCitizen01"
+category: Web
+
+description: |
+  Capturing life. Creating art.
+  http://chall.foobar.nitdgplug.org:30623
+
+type: dynamic
+
+value: 500
+decay: 40
+minimum: 100
+
+flags:
+  - GLUG{D035_4ny0n3_us3_jwk5??}
+
+tags:
+  - web
+
+files:
+  - web/photo-exhibit/dist/ThePhotoExhibit.tar.gz
+
+state: hidden
+
+version: "0.1"
+
+replicas: 1
+containers:
+  server:
+    build: .
+    ports:
+      - containerPort: 3000
+
+expose:
+- containerPort: 3000
+  nodePort: 30623

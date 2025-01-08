@@ -1,0 +1,37 @@
+name: Whoami
+author: deadlycode07
+category: Web
+
+description: |
+  Guess who
+  http://chall.foobar.nitdgplug.org:30624
+
+type: dynamic
+
+value: 500
+decay: 40
+minimum: 100
+
+files:
+  - web/whoami/dist/whoami.tar.gz
+
+flags:
+  - GLUG{n0w_1_kn0w_wh0_4r3_y0u_1FOXABB6GM}
+
+tags:
+  - web
+
+state: hidden
+
+version: "0.1"
+
+replicas: 2
+containers:
+  server:
+    build: .
+    ports:
+      - containerPort: 80
+
+expose:
+- containerPort: 80
+  nodePort: 30624
