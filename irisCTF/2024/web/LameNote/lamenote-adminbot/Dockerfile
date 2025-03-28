@@ -1,24 +1,9 @@
-# Copyright 2020 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Base image
 FROM gcr.io/kctf-docker/challenge@sha256:0f7d757bcda470c3bbc063606335b915e03795d72ba1d8fdb6f0f9ff3757364f
 
-RUN apt-get update && apt-get install -y gnupg2 wget
+RUN apt-get update && apt-get install -y gnupg2 wget socat
 
-# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
-# Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer installs, work.
-# Deps from https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#chrome-headless-doesnt-launch-on-unix
-#  plus libxshmfence1 which seems to be missing
+# Install dependencies for Puppeteer
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && wget -q -O - https://deb.nodesource.com/setup_20.x | bash - \
@@ -65,40 +50,17 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
         nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-ENV DOMAIN="lamenote-web.chal.irisc.tf"
-# Hosting multiple web challenges same-site to each other can lead to
-# unintended solutions. E.g. an xss on a.foo.com will be able to overwrite
-# cookies on b.foo.com.
-# To prevent this, we can block chrome from accessing any subdomains under
-# foo.com except for the real challenge domain using a PAC script.
-# Unfortunately, PAC will not work in chrome headless mode, so this will use
-# more resources.
+# Set environment variables
+ENV DOMAIN="localhost"
 ENV BLOCK_SUBORIGINS="0"
-ENV REGISTERED_DOMAIN="chal.irisc.tf"
-
+ENV REGISTERED_DOMAIN="localhost"
 ENV PUPPETEER_CACHE_DIR="/home/user/.cache/puppeteer"
+ENV BOT_TIMEOUT="1000"
+
+# Prepare bot environment
 RUN mkdir /home/user && cd /home/user && npm install puppeteer
 COPY bot.js /home/user/
 
-ENV BOT_TIMEOUT="1000"
-
-RUN if [ "${BLOCK_SUBORIGINS}" = "1" ]; then \
-      apt-get update \
-      && apt-get install -yq --no-install-recommends xvfb \
-      && rm -rf /var/lib/apt/lists/*; \
-    fi
-
-CMD kctf_setup && \
-    mount -t tmpfs none /tmp && \
-    mkdir /tmp/chrome-userdata && chmod o+rwx /tmp/chrome-userdata && \
-    while true; do \
-      if [ "${BLOCK_SUBORIGINS}" = "1" ]; then \
-        kctf_drop_privs env BLOCK_SUBORIGINS="${BLOCK_SUBORIGINS}" DOMAIN="${DOMAIN}" REGISTERED_DOMAIN="${REGISTERED_DOMAIN}" xvfb-run /usr/bin/node /home/user/bot.js; \
-      else \
-        kctf_drop_privs env BLOCK_SUBORIGINS="${BLOCK_SUBORIGINS}" DOMAIN="${DOMAIN}" REGISTERED_DOMAIN="${REGISTERED_DOMAIN}" /usr/bin/node /home/user/bot.js; \
-      fi; \
-    done & \
-    kctf_drop_privs \
-    socat \
-      TCP-LISTEN:1337,reuseaddr,fork \
-      EXEC:"kctf_pow socat STDIN TCP\:localhost\:1338"
+# CMD to start the bot and socat
+CMD socat TCP-LISTEN:1337,reuseaddr,fork EXEC:"kctf_pow socat STDIN TCP:localhost:1338" & \
+    node /home/user/bot.js
